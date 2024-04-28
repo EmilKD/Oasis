@@ -1,6 +1,19 @@
 #include"GraphicalObject.h"
 
 
+vector<glm::vec3> BoxLocations = {
+	glm::vec3(0.0f,  0.0f,  0.0f),
+	glm::vec3(2.0f,  5.0f, -15.0f),
+	glm::vec3(-1.5f, -2.2f, -2.5f),
+	glm::vec3(-3.8f, -2.0f, -12.3f),
+	glm::vec3(2.4f, -0.4f, -3.5f),
+	glm::vec3(-1.7f,  3.0f, -7.5f),
+	glm::vec3(1.3f, -2.0f, -2.5f),
+	glm::vec3(1.5f,  2.0f, -2.5f),
+	glm::vec3(1.5f,  0.2f, -1.5f),
+	glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
 // Graphical Object Class Functions -----------------------------------------------------------------------------------
 
 GraphicalObj::~GraphicalObj()
@@ -78,57 +91,78 @@ void GraphicalObj::DrawShape(glm::vec3 color)
 
 	// Setting the Color
 	this->Objshader->set3fv("myColor", color);
-	transform();
+	
 
-	if(this->Objshader->HasTexture())
+
+	for (glm::vec3 trans: BoxLocations)
 	{
-		glBindTexture(GL_TEXTURE_2D, this->Objshader->texture);
-
-		if (!indexBuffer.empty())
+		transform(glm::vec3(1.0f, 1.0f, 1.0f), trans, (float)glfwGetTime() * glm::radians(50.0f) * glm::vec3(0.5f, 1.0f, 0.0f));
+		if (this->Objshader->HasTexture())
 		{
-			glBindVertexArray(this->VAO);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, this->Objshader->texture);
+
+			if (!indexBuffer.empty())
+			{
+				glBindVertexArray(this->VAO);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindTexture(GL_TEXTURE_2D, 0);
+				glBindVertexArray(0);
+			}
+			else
+			{
+				glBindVertexArray(this->VAO);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glBindTexture(GL_TEXTURE_2D, 0);
+				glBindVertexArray(0);
+			}
 		}
 		else
 		{
-			glBindVertexArray(this->VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glBindVertexArray(0);
-		}
-	}
-	else 
-	{
-		if (!indexBuffer.empty())
-		{
-			glBindVertexArray(this->VAO);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-		}
-		else
-		{
-			glBindVertexArray(this->VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
+			if (!indexBuffer.empty())
+			{
+				glBindVertexArray(this->VAO);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+				glBindVertexArray(0);
+			}
+			else
+			{
+				glBindVertexArray(this->VAO);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glBindVertexArray(0);
+			}
 		}
 	}
 }
 
 
-void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::float32 rotate)
+void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::vec3 rotation)
 {
 	Shader* ThisObjectShader{ getShader() };
 	ThisObjectShader->use();
 	model = glm::mat4(1.0f);
 	model = glm::scale(model, scale);
 	model = glm::translate(model, translate);
-	model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	model = glm::rotate(model, glm::length(rotation), glm::normalize(rotation));
+
+
+	// Camera
+	/*glm::vec3 CameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 CameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 CameraDirection = glm::normalize(CameraPos - CameraTarget);
+	glm::vec3 up = glm::vec3(0.0f, 3.0f, 0.0f);
+	glm::vec3 CameraRightVector = glm::normalize(glm::cross(up, CameraDirection));
+	glm::vec3 CameraUpCVector = glm::normalize(glm::cross(CameraDirection, CameraRightVector));*/
+
+	const float radius = 10.0f;
+	float camX = sin(glfwGetTime()*3) * radius;
+	float camZ = cos(glfwGetTime()*3) * radius;
+	glm::mat4 view;
+	view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+
+	//glm::mat4 view = glm::mat4(1.0f);
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, glm::sin((float)glfwGetTime())-4));
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 
