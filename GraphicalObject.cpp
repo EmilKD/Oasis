@@ -155,11 +155,15 @@ void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::vec3 rot
 	glm::vec3 CameraRightVector = glm::normalize(glm::cross(up, CameraDirection));
 	glm::vec3 CameraUpCVector = glm::normalize(glm::cross(CameraDirection, CameraRightVector));*/
 
+	// Camera Rotation
 	const float radius = 10.0f;
 	float camX = sin(glfwGetTime()*3) * radius;
 	float camZ = cos(glfwGetTime()*3) * radius;
 	glm::mat4 view;
 	view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+
+	// Manual Camera Translation
+	//glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 	//glm::mat4 view = glm::mat4(1.0f);
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, glm::sin((float)glfwGetTime())-4));
