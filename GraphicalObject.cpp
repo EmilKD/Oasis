@@ -139,6 +139,9 @@ void GraphicalObj::DrawShape(glm::vec3 color)
 
 void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::vec3 rotation)
 {
+	
+	
+
 	Shader* ThisObjectShader{ getShader() };
 	ThisObjectShader->use();
 	model = glm::mat4(1.0f);
@@ -146,32 +149,17 @@ void GraphicalObj::transform(glm::vec3 scale, glm::vec3 translate, glm::vec3 rot
 	model = glm::translate(model, translate);
 	model = glm::rotate(model, glm::length(rotation), glm::normalize(rotation));
 
-
-	// Camera
-	/*glm::vec3 CameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 CameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 CameraDirection = glm::normalize(CameraPos - CameraTarget);
-	glm::vec3 up = glm::vec3(0.0f, 3.0f, 0.0f);
-	glm::vec3 CameraRightVector = glm::normalize(glm::cross(up, CameraDirection));
-	glm::vec3 CameraUpCVector = glm::normalize(glm::cross(CameraDirection, CameraRightVector));*/
-
 	// Camera Rotation
-	const float radius = 10.0f;
-	float camX = sin(glfwGetTime()*3) * radius;
-	float camZ = cos(glfwGetTime()*3) * radius;
-	glm::mat4 view;
-	view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	/*const float radius = 10.0f;
+	float camX = sin(3) * radius;
+	float camZ = cos(3) * radius;
+	view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));*/
 
-	// Manual Camera Translation
-	//glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
-	//glm::mat4 view = glm::mat4(1.0f);
-	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, glm::sin((float)glfwGetTime())-4));
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 
 	ThisObjectShader->set4mat("model", model);
-	ThisObjectShader->set4mat("view", view);
+	//ThisObjectShader->set4mat("view", view);
 	ThisObjectShader->set4mat("projection", projection);
 }
 

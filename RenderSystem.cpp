@@ -5,8 +5,11 @@
 
 int WindowSize[2] = { 1280,720 };
 
-bool left_mouse_button, right_mouse_button;
+bool left_mouse_button, right_mouse_button, firstMouse{true};
 float g_xpos, g_ypos, wc_x, wc_y, Scale_x = 0.05f, Scale_y = Scale_x;
+float CurrentMPx{ 0.0f }, CurrentMPy{ 0.0f }, LastMPx{ WindowSize[0] / 2.0f }, LastMPy{ WindowSize[1] / 2.0f }, DeltaMPx{ 0.0f }, DeltaMPy{ 0.0f };
+float pitch{ 0.0f }, roll{ 0.0f }, yaw{ -90.0f };
+glm::vec3 direction;
 
 struct KeyFlags
 {
@@ -29,14 +32,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void process_input(GLFWwindow* window)
+void RenderSystem::process_input(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
 
-	const float cameraSpeed = 0.05f; // adjust accordingly
+	const float cameraSpeed = 3.0f*getDeltaTime(); // adjust accordingly
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -49,10 +52,38 @@ void process_input(GLFWwindow* window)
 
 void cursor_pos_callBack(GLFWwindow* window, double xpos, double ypos)
 {
-	g_xpos = xpos;
-	g_ypos = ypos;
-	wc_x = (2 * (xpos / WindowSize[0]) - 1) / Scale_x;
-	wc_y = (-2 * (ypos / WindowSize[1]) + 1) / Scale_y;
+	if (firstMouse)
+	{
+		LastMPx = xpos;
+		LastMPy = ypos;
+		firstMouse = false;
+	}
+
+	DeltaMPx = xpos - LastMPx;
+	DeltaMPy = LastMPy - ypos;
+	LastMPx = xpos;
+	LastMPy = ypos;
+
+	const float sensitivity = 0.1f;
+	DeltaMPx *= sensitivity;
+	DeltaMPy *= sensitivity;
+
+	pitch += DeltaMPy;
+	yaw += DeltaMPx;
+
+	if (pitch > 180.0f)
+		pitch = 180.0f;
+	else if (pitch < -180)
+		pitch = -180;
+	if (yaw > 180.0f)
+		yaw = 180.0f;
+	else if (yaw < -180)
+		yaw = -180;
+
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -224,11 +255,16 @@ int RenderSystem::RenderTheQueue()
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-
 		if (!RenderQueue.empty())
 		{
 			for (GraphicalObj* GObj : RenderQueue)
 			{
+				CalcDeltaTime();
+
+				// Manual Camera Translation
+				glm::mat4 view;
+				view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+				GObj->getShader()->set4mat("view", view);
 				GObj->DrawShape(color.White);
 			}
 		}
@@ -245,4 +281,16 @@ int RenderSystem::RenderTheQueue()
 void RenderSystem::AddToQueue(GraphicalObj* Obj) 
 {
 	RenderQueue.push_back(Obj);
+}
+
+void RenderSystem::CalcDeltaTime() 
+{
+	currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+}
+
+float RenderSystem::getDeltaTime() 
+{
+	return deltaTime;
 }
