@@ -7,7 +7,7 @@ int WindowSize[2] = { 1280,720 };
 
 bool left_mouse_button, right_mouse_button, firstMouse{true};
 float g_xpos, g_ypos, wc_x, wc_y, Scale_x = 0.05f, Scale_y = Scale_x;
-float CurrentMPx{ 0.0f }, CurrentMPy{ 0.0f }, LastMPx{ WindowSize[0] / 2.0f }, LastMPy{ WindowSize[1] / 2.0f }, DeltaMPx{ 0.0f }, DeltaMPy{ 0.0f };
+float LastMPx{ WindowSize[0] / 2.0f }, LastMPy{ WindowSize[1] / 2.0f }, DeltaMPx{ 0.0f }, DeltaMPy{ 0.0f };
 float pitch{ 0.0f }, roll{ 0.0f }, yaw{ -90.0f };
 glm::vec3 direction;
 
@@ -239,7 +239,6 @@ int RenderSystem::FreeTypeInit()
 
 int RenderSystem::RenderTheQueue()
 {
-	
 	glEnable(GL_DEPTH_TEST);
 	
 	while (!glfwWindowShouldClose(window))
@@ -262,8 +261,9 @@ int RenderSystem::RenderTheQueue()
 				CalcDeltaTime();
 
 				// Manual Camera Translation
+				defaultCam.setTransform(cameraPos, cameraFront, cameraUp);
 				glm::mat4 view;
-				view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+				view = defaultCam.getView();
 				GObj->getShader()->set4mat("view", view);
 				GObj->DrawShape(color.White);
 			}
