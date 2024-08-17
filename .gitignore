@@ -370,3 +370,4 @@ FodyWeavers.xsd
 /glad.c
 
 ./Libraries
+/Source/Headers/stb_image.h
