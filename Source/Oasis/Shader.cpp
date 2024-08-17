@@ -14,8 +14,8 @@ void Shader::Init()
     try
     {
         // open files
-        vShaderFile.open("./Shader.vs");
-        fShaderFile.open("./Shader.fs");
+        vShaderFile.open("./Source/Shaders/Shader.vs");
+        fShaderFile.open("./Source/Shaders/Shader.fs");
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
         vShaderStream << vShaderFile.rdbuf();

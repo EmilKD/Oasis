@@ -71,8 +71,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>.\Libraries\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>.\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Libraries\Include;$(IncludePath);$(ProjectDir)\Source\Headers</IncludePath>
+    <LibraryPath>$(ProjectDir)\Libraries\lib;$(LibraryPath);$(ProjectDir)\Source\Shaders;</LibraryPath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -109,6 +110,8 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,22 +136,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="GraphicalObject.cpp" />
+    <ClCompile Include="Source\Oasis\Camera.cpp" />
+    <ClCompile Include="Libraries\glad.c" />
+    <ClCompile Include="Source\Oasis\GraphicalObject.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RenderSystem.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Source\Oasis\RenderSystem.cpp" />
+    <ClCompile Include="Source\Oasis\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="GraphicalObject.h" />
-    <ClInclude Include="RenderSystem.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Source\Headers\Camera.h" />
+    <ClInclude Include="Source\Headers\GraphicalObject.h" />
+    <ClInclude Include="Source\Headers\RenderSystem.h" />
+    <ClInclude Include="Source\Headers\Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader.fs" />
-    <None Include="Shader.vs" />
+    <None Include="Source\Shaders\Shader.fs" />
+    <None Include="Source\Shaders\Shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

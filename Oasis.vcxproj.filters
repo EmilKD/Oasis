@@ -24,41 +24,41 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
+    <ClCompile Include="Libraries\glad.c">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Source\Oasis\Camera.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicalObject.cpp">
+    <ClCompile Include="Source\Oasis\GraphicalObject.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
+    <ClCompile Include="Source\Oasis\RenderSystem.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="Source\Oasis\Shader.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RenderSystem.h">
+    <ClInclude Include="Source\Headers\RenderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicalObject.h">
+    <ClInclude Include="Source\Headers\GraphicalObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Source\Headers\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Source\Headers\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader.vs">
+    <None Include="Source\Shaders\Shader.vs">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Shader.fs">
+    <None Include="Source\Shaders\Shader.fs">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>
