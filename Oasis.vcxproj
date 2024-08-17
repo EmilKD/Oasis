@@ -136,10 +136,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="OasisTest.cpp" />
     <ClCompile Include="Source\Oasis\Camera.cpp" />
     <ClCompile Include="Libraries\glad.c" />
     <ClCompile Include="Source\Oasis\GraphicalObject.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="Source\Oasis\RenderSystem.cpp" />
     <ClCompile Include="Source\Oasis\Shader.cpp" />
   </ItemGroup>
